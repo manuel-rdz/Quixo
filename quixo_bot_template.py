@@ -2,6 +2,8 @@ class QuixoBot:
     # symbol sera un numero representando el simbolo con el que me
     # toca jugar. Puede tener el valor 1 o -1;
     def __init__(self, symbol):
+        # define a name for your bot to appear during the log printing.
+        self.name = ""
         pass
 
     # board es el estado actual del tablero. Sera una matriz de 5x5 que contiene
