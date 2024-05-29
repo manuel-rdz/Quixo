@@ -268,7 +268,7 @@ class QuixoReferee:
         symbol_p2 = 1       
         for i in range(limit_games):
             print("----------- STARTING GAME ", i + 1, "-----------")
-            symbol_p1, symbol_p2 = symbol_p2, symbol_p1
+            self.player1, self.player2 = self.player2, self.player1
 
             self.player1.reset(symbol_p1)
             self.player2.reset(symbol_p2)
