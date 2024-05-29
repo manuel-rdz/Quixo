@@ -277,7 +277,9 @@ class QuixoReferee:
             print(self.player2.name, 'with symbol', 'O' if symbol_p2 == -1 else 'X') 
 
             winner = self.play_game(limit_turns)
-
+            self.player1.who_win(winner)
+            self.player2.who_win(winner)
+            
             if self.player1.symbol == winner:
                 print(self.player1.name, "WINS!")
                 score[self.player1.name] += 1
