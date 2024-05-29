@@ -1,4 +1,5 @@
 import copy
+from tabulate import tabulate
 
 from collections import defaultdict
 
@@ -233,7 +234,7 @@ class QuixoReferee:
         if self.__is_valid_move(new_board, player.symbol):
             winning_pos, winning_sym = self.__is_winning_position(new_board, player.symbol)
             if winning_pos:
-                print("Symbol ", winning_sym, "wins!")
+                print("Symbol", 'O' if winning_sym == -1 else 'X', "wins!")
                 self.__print_board(self.board)
                 return True, winning_sym
         else:
@@ -272,8 +273,8 @@ class QuixoReferee:
             self.player1.reset(symbol_p1)
             self.player2.reset(symbol_p2)
 
-            print(self.player1.name, 'with symbol', symbol_p1)
-            print(self.player2.name, 'with symbol', symbol_p2) 
+            print(self.player1.name, 'with symbol', 'O' if symbol_p1 == -1 else 'X')
+            print(self.player2.name, 'with symbol', 'O' if symbol_p2 == -1 else 'X') 
 
             winner = self.play_game(limit_turns)
 
@@ -297,13 +298,12 @@ class QuixoReferee:
         else: print("IT'S A DRAW!") 
 
 
-    def __print_board(self, board):
-        print("-------------------")
-        for i in range(5):
-            for j in range(5):
-                print(board[i][j], end="\t")
-            print()
-        print("-------------------")
+    def __print_board(self, board=None):
+        if board is None:
+            board = self.board
+        headers = [""] + [str(i) for i in range(1, 6)]
+        rows = [[str(i + 1)] + ['O' if cell == -1 else 'X' if cell == 1 else ' ' for cell in row] for i, row in enumerate(board)]
+        print(tabulate(rows, headers=headers, tablefmt="grid"))
 
 """
 referee = QuixoReferee(bot1, bot2)
