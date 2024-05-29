@@ -234,7 +234,7 @@ class QuixoReferee:
         if self.__is_valid_move(new_board, player.symbol):
             winning_pos, winning_sym = self.__is_winning_position(new_board, player.symbol)
             if winning_pos:
-                print("Symbol ", winning_sym, "wins!")
+                print("Symbol", 'O' if winning_sym == -1 else 'X', "wins!")
                 self.__print_board(self.board)
                 return True, winning_sym
         else:
@@ -273,8 +273,8 @@ class QuixoReferee:
             self.player1.reset(symbol_p1)
             self.player2.reset(symbol_p2)
 
-            print(self.player1.name, 'with symbol', symbol_p1)
-            print(self.player2.name, 'with symbol', symbol_p2) 
+            print(self.player1.name, 'with symbol', 'O' if symbol_p1 == -1 else 'X')
+            print(self.player2.name, 'with symbol', 'O' if symbol_p2 == -1 else 'X') 
 
             winner = self.play_game(limit_turns)
 
