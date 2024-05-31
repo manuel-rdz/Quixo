@@ -1,5 +1,7 @@
 import copy
 from tabulate import tabulate
+import threading
+import queue
 
 from collections import defaultdict
 
@@ -230,17 +232,30 @@ class QuixoReferee:
 
     def __play_turn(self, player):
         print("Player", player.name, "turn!")
-        new_board = player.play_turn(copy.deepcopy(self.board))
-        if self.__is_valid_move(new_board, player.symbol):
-            winning_pos, winning_sym = self.__is_winning_position(new_board, player.symbol)
-            if winning_pos:
-                print("Symbol", 'O' if winning_sym == -1 else 'X', "wins!")
-                self.__print_board(self.board)
-                return True, winning_sym
+        result_queue = queue.Queue()
+
+        def play_turn_with_timeout():
+            new_board = player.play_turn(copy.deepcopy(self.board))
+            result_queue.put(new_board)
+
+        turn_thread = threading.Thread(target=play_turn_with_timeout)
+        turn_thread.start()
+        turn_thread.join(timeout=1)
+
+        if not result_queue.empty():
+            new_board = result_queue.get()
+            if self.__is_valid_move(new_board, player.symbol):
+                winning_pos, winning_sym = self.__is_winning_position(new_board, player.symbol)
+                if winning_pos:
+                    print("Symbol ", winning_sym, "wins!")
+                    self.__print_board(self.board)
+                    return True, winning_sym
+            else:
+                print("Player", player.name, "made an illegal move. Loses automatically!")
+                self.__print_board(new_board)
+                return True, (player.symbol * -1)
         else:
-            print("Player", player.name, "made an illegal move. Loses automatically!")
-            self.__print_board(new_board)
-            return True, (player.symbol * -1)
+            print("Player", player.name, "took too long to move. Loses automatically!")
 
         return False, 0
 
